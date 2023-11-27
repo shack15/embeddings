@@ -2,7 +2,8 @@ import requests
 from .collection import Collection
 from . import api_key
 
-API_URL = "http://your-api-url"  # TODO: Replace with hosted API URL
+# TODO: Replace with hosted API URL
+API_URL = "http://your-api-url"
 
 
 class Database:
@@ -14,7 +15,7 @@ class Database:
     def create_collection(self, name, distance_metric="cosine"):
         if api_key is None:
             raise Exception(
-                "API key not set. Use embeddings.set_api_key() to set the API key.")
+                "API key not set. Use embeddings.api_key = API_KEY to set the API key.")
 
         # Make API request to create a new collection
         response = requests.post(
@@ -36,7 +37,7 @@ class Database:
     def load_collection(self, name):
         if api_key is None:
             raise Exception(
-                "API key not set. Use embeddings.set_api_key() to set the API key.")
+                "API key not set. Use embeddings.api_key = API_KEY to set the API key.")
 
         # Make API request to get the collection
         response = requests.post(
@@ -57,7 +58,7 @@ class Database:
     def delete_collection(self, name):
         if api_key is None:
             raise Exception(
-                "API key not set. Use embeddings.set_api_key() to set the API key.")
+                "API key not set. Use embeddings.api_key = API_KEY to set the API key.")
 
         # Making the API request to delete the collection
         response = requests.delete(
