@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 import random
 import time
+import nltk
 from nltk.corpus import brown
 import tqdm
 import embeddings as E
 
 
 if __name__ == '__main__':
+    nltk.download('brown')
     random.seed(0)
     n_samples = 10000
     emb = E.GloveEmbedding()
