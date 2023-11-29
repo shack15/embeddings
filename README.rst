@@ -7,6 +7,14 @@ Embeddings
 .. image:: https://travis-ci.org/vzhong/embeddings.svg?branch=master
     :target: https://travis-ci.org/vzhong/embeddings
 
+
+# Embeddings
+
+Embeddings is a Python package that provides pretrained word embeddings for natural language processing and machine learning. It now includes support for BGE and MiniLM embeddings.
+
+Instead of loading a large file to query for embeddings, [embeddings](https://github.com/shack15/embeddings/embeddings/minilm.py#4%2C6-4%2C6) is backed by a database and fast to load and query:
+
+
 Embeddings is a python package that provides pretrained word embeddings for natural language processing and machine learning.
 
 Instead of loading a large file to query for embeddings, ``embeddings`` is backed by a database and fast to load and query:
@@ -38,31 +46,35 @@ Usage
 -----
 
 Upon first use, the embeddings are first downloaded to disk in the form of a SQLite database.
-This may take a long time for large embeddings such as GloVe.
+This may take a long time for large embeddings such as GloVe, BGE, and MiniLM.
 Further usage of the embeddings are directly queried against the database.
 Embedding databases are stored in the ``$EMBEDDINGS_ROOT`` directory (defaults to ``~/.embeddings``). Note that this location is probably **undesirable** if your home directory is on NFS, as it would slow down database queries significantly.
 
 
 .. code-block:: python
 
-    from embeddings import GloveEmbedding, FastTextEmbedding, KazumaCharEmbedding, ConcatEmbedding
+    from embeddings import GloveEmbedding, FastTextEmbedding, KazumaCharEmbedding, ConcatEmbedding, BGEEmbedding, MiniLMEmbedding
     
     g = GloveEmbedding('common_crawl_840', d_emb=300, show_progress=True)
     f = FastTextEmbedding()
     k = KazumaCharEmbedding()
-    c = ConcatEmbedding([g, f, k])
+    b = BGEEmbedding()
+    m = MiniLMEmbedding()
+    c = ConcatEmbedding([g, f, k, b, m])
     for w in ['canada', 'vancouver', 'toronto']:
         print('embedding {}'.format(w))
         print(g.emb(w))
         print(f.emb(w))
         print(k.emb(w))
+        print(b.emb(w))
+        print(m.emb(w))
         print(c.emb(w))
 
 
 Docker
 ------
 
-If you use Docker, an image prepopulated with the Common Crawl 840 GloVe embeddings and Kazuma Hashimoto's character ngram embeddings is available at `vzhong/embeddings <https://hub.docker.com/r/vzhong/embeddings>`_.
+If you use Docker, an image prepopulated with the Common Crawl 840 GloVe embeddings, Kazuma Hashimoto's character ngram embeddings, BGE and MiniLM embeddings is available at `vzhong/embeddings <https://hub.docker.com/r/vzhong/embeddings>`_.
 To mount volumes from this container, set ``$EMBEDDINGS_ROOT`` in your container to ``/opt/embeddings``.
 
 For example:
