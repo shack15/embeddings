@@ -7,9 +7,6 @@ Embeddings
 .. image:: https://travis-ci.org/vzhong/embeddings.svg?branch=master
     :target: https://travis-ci.org/vzhong/embeddings
 
-
-# Embeddings
-
 Embeddings is a Python package that provides pretrained word embeddings for natural language processing and machine learning. It now includes support for BGE and MiniLM embeddings.
 
 Instead of loading a large file to query for embeddings, [embeddings](https://github.com/shack15/embeddings/embeddings/minilm.py#4%2C6-4%2C6) is backed by a database and fast to load and query:
