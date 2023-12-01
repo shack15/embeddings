@@ -20,10 +20,8 @@ class Database:
         # Make API request to create a new collection
         response = requests.post(
             f"{API_URL}/create_collection",
-            json={
-                "collection_name": name,
-                "api_key": api_key,
-            }
+            json={"collection_name": name},
+            headers={"Authorization": f"Bearer {api_key}"}
         )
 
         if response.status_code == 200:
@@ -34,7 +32,7 @@ class Database:
     # Connects to an existing collection in ChromaDB and returns a Collection object.
     # :param name: Name of the collection to be loaded.
     # :return: Collection object.
-    def load_collection(self, name):
+    def get_collection(self, name):
         if api_key is None:
             raise Exception(
                 "API key not set. Use embeddings.api_key = API_KEY to set the API key.")
@@ -42,7 +40,8 @@ class Database:
         # Make API request to get the collection
         response = requests.post(
             f"{API_URL}/get_collection",
-            json={"collection_name": name, "api_key": api_key}
+            json={"collection_name": name},
+            headers={"Authorization": f"Bearer {api_key}"}
         )
 
         if response.status_code == 200:
@@ -63,7 +62,8 @@ class Database:
         # Making the API request to delete the collection
         response = requests.delete(
             f"{API_URL}/delete_collection",
-            json={"collection_name": name, "api_key": api_key}
+            json={"collection_name": name},
+            headers={"Authorization": f"Bearer {api_key}"}
         )
 
         if response.status_code != 200:
