@@ -26,17 +26,21 @@ class Generator:
             }
         }
 
+    # List all available embedding models and their details
     def list_models(self):
         return list(self.models_info.values())
 
+    # Set the model to be used for embedding generation
     def set_model(self, model_name: str):
         if model_name not in self.models_info:
             raise ValueError("Model not found. Please choose a valid model.")
         self.model_name = model_name
 
+    # Get the details of the set model
     def get_model_info(self):
         return self.models_info.get(self.model_name, {})
 
+    # Generate embeddings for the given text
     def embed(self, text: str):
         if api_key is None:
             raise Exception("API key not set. Use embeddings.api_key = API_KEY to set the API key.")
