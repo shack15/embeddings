@@ -1,4 +1,5 @@
 import requests
+from transformers import AutoTokenizer
 from . import api_key
 
 # Constants
@@ -14,7 +15,8 @@ class Generator:
                 "full_name": "BAAI/bge-small-en-v1.5",
                 "type": "text",
                 "description": "General purpose embedding model",
-                "dimensions": 768,
+                "dimensions": 384,
+                "num_tokens": 512,
                 "pricing": "0.0001 per embedding",
             },
             "MiniLM": {
@@ -22,6 +24,7 @@ class Generator:
                 "type": "text",
                 "description": "General purpose embedding model",
                 "dimensions": 384,
+                "num_tokens": 512,
                 "pricing": "0.00001 per embedding",
             }
         }
@@ -56,3 +59,18 @@ class Generator:
             raise Exception(f"Error in embedding generation: {response.text}")
 
         return response.json()["embeddings"]
+    
+    # Counts the number of tokens in the given text with respect to the set embedding model
+    def count_tokens(self, text: str):
+        model_full_name = self.models_info[self.model_name]["full_name"]
+        tokenizer = AutoTokenizer.from_pretrained(model_full_name)
+        inputs = tokenizer(text)
+        return len(inputs["input_ids"])
+
+    # Checks if the given text is within the token limit of the set embedding model
+    def within_token_limit(self, text: str):
+        token_count = self.count_tokens(text)
+        max_tokens = self.models_info[self.model_name]["num_tokens"]
+        if token_count > max_tokens:
+            return False, f"Text exceeds the token limit of {max_tokens}. Current token count is {token_count}."
+        return True, "Text is within the token limit."
