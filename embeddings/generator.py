@@ -9,7 +9,8 @@ class Generator:
     # Initializes the Generator
     # TODO: Should make an api call to set to user's chosen model
     def __init__(self):
-        self.model_name = "bge-small"
+        self.model_name = "MiniLM"
+        self.tokenizers = {}
         self.models_info = {
             "bge-small": {
                 "full_name": "BAAI/bge-small-en-v1.5",
@@ -28,6 +29,10 @@ class Generator:
                 "pricing": "0.00001 per embedding",
             }
         }
+        # Preload tokenizers for all models
+        for model in self.models_info:
+            full_name = self.models_info[model]["full_name"]
+            self.tokenizers[model] = AutoTokenizer.from_pretrained(full_name)
 
     # List all available embedding models and their details
     def list_models(self):
@@ -48,6 +53,11 @@ class Generator:
         if api_key is None:
             raise Exception("API key not set. Use embeddings.api_key = API_KEY to set the API key.")
 
+        # Check if the text is within the token limit
+        is_within_limit, message = self.within_token_limit(text)
+        if not is_within_limit:
+            raise ValueError(message)
+
         model_full_name = self.models_info[self.model_name]["full_name"]
         response = requests.post(
             f"{GENERATION_SERVER_URL}/embed",
@@ -62,8 +72,7 @@ class Generator:
     
     # Counts the number of tokens in the given text with respect to the set embedding model
     def count_tokens(self, text: str):
-        model_full_name = self.models_info[self.model_name]["full_name"]
-        tokenizer = AutoTokenizer.from_pretrained(model_full_name)
+        tokenizer = self.tokenizers[self.model_name]
         inputs = tokenizer(text)
         return len(inputs["input_ids"])
 
@@ -72,5 +81,5 @@ class Generator:
         token_count = self.count_tokens(text)
         max_tokens = self.models_info[self.model_name]["num_tokens"]
         if token_count > max_tokens:
-            return False, f"Text exceeds the token limit of {max_tokens}. Current token count is {token_count}."
+            return False, f"Text exceeds the token limit of {max_tokens}.\nCurrent token count is {token_count}."
         return True, "Text is within the token limit."
