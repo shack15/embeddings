@@ -17,7 +17,7 @@ class Generator:
                 "type": "text",
                 "description": "General purpose embedding model",
                 "dimensions": 384,
-                "num_tokens": 512,
+                "token_limit": 512,
                 "pricing": "0.0001 per embedding",
             },
             "MiniLM": {
@@ -25,7 +25,7 @@ class Generator:
                 "type": "text",
                 "description": "General purpose embedding model",
                 "dimensions": 384,
-                "num_tokens": 512,
+                "token_limit": 512,
                 "pricing": "0.00001 per embedding",
             }
         }
@@ -79,7 +79,7 @@ class Generator:
     # Checks if the given text is within the token limit of the set embedding model
     def within_token_limit(self, text: str):
         token_count = self.count_tokens(text)
-        max_tokens = self.models_info[self.model_name]["num_tokens"]
+        max_tokens = self.models_info[self.model_name]["token_limit"]
         if token_count > max_tokens:
             return False, f"Text exceeds the token limit of {max_tokens}.\nCurrent token count is {token_count}."
         return True, "Text is within the token limit."
