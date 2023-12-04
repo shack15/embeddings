@@ -43,7 +43,7 @@ class Collection:
     # :param ids: List of ids corresponding to the embeddings to be added.
     # :param embeddings: List of embeddings to be added.
     # TODO: Add check for data types of parameters
-    def add(self, embeddings=None, documents=None, metadatas=None, ids=None):
+    def add(self, documents=None, embeddings=None, metadatas=None, ids=None):
         if api_key is None:
             raise Exception(
                 "API key not set. Use embeddings.api_key = API_KEY to set the API key.")
