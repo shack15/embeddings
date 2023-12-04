@@ -1,5 +1,6 @@
 import requests
 from transformers import AutoTokenizer
+from typing import Union, List
 from . import api_key
 
 # Constants
@@ -48,20 +49,23 @@ class Generator:
     def get_model_info(self):
         return self.models_info.get(self.model_name, {})
 
-    # Generate embeddings for the given text
-    def embed(self, text: str):
+    def embed(self, text: Union[str, List[str]]):
         if api_key is None:
             raise Exception("API key not set. Use embeddings.api_key = API_KEY to set the API key.")
 
-        # Check if the text is within the token limit
-        is_within_limit, message = self.within_token_limit(text)
-        if not is_within_limit:
-            raise ValueError(message)
+        # Convert text to a list if it's a single string
+        texts = [text] if isinstance(text, str) else text
+
+        # Check if the text(s) are within the token limit
+        for t in texts:
+            is_within_limit, message = self.within_token_limit(t)
+            if not is_within_limit:
+                raise ValueError(message)
 
         model_full_name = self.models_info[self.model_name]["full_name"]
         response = requests.post(
             f"{GENERATION_SERVER_URL}/embed",
-            json={"text": text, "model_name": model_full_name},
+            json={"texts": texts, "model_name": model_full_name},
             headers={"Authorization": f"Bearer {api_key}"}
         )
 
@@ -69,6 +73,7 @@ class Generator:
             raise Exception(f"Error in embedding generation: {response.text}")
 
         return response.json()["embeddings"]
+
     
     # Counts the number of tokens in the given text with respect to the set embedding model
     def count_tokens(self, text: str):
