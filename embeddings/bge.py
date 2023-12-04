@@ -10,6 +10,10 @@ class BGEEmbedding(Embedding):
 
     def emb(self, sentences):
         encoded_input = self.tokenizer(sentences, padding=True, truncation=True, return_tensors='pt')
+        for sentence in sentences:
+            if (len(self.tokenizer(sentence)["input_ids"]) > 512):
+                raise Exception(sentence, "exceeds token limit")
+                
         with torch.no_grad():
             model_output = self.model(**encoded_input)
         sentence_embeddings = model_output[0][:, 0]
