@@ -3,7 +3,7 @@ from .collection import Collection
 from . import api_key
 
 # TODO: Replace with hosted API URL
-API_URL = "http://your-api-url"
+API_URL = "https://api.silverarrow.ai/storage/"
 
 
 class Database:

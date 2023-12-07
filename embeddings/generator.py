@@ -4,7 +4,7 @@ from typing import Union, List
 from . import api_key
 
 # Constants
-GENERATION_SERVER_URL = "https://generation-bln3a2qo6a-uc.a.run.app"
+GENERATION_SERVER_URL = "https://api.silverarrow.ai/generation"
 
 class Generator:
     # Initializes the Generator
@@ -64,7 +64,7 @@ class Generator:
 
         model_full_name = self.models_info[self.model_name]["full_name"]
         response = requests.post(
-            f"{GENERATION_SERVER_URL}/embed",
+            f"{GENERATION_SERVER_URL}/embed_text",
             json={"texts": texts, "model_name": model_full_name},
             headers={"Authorization": f"Bearer {api_key}"}
         )
